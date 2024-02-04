@@ -1,16 +1,26 @@
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
     public static int mainThing() {
+        List<String> list = new ArrayList<>();
+        list.add("Выберите действие:");
+        list.add("1-Призвети новый расчет");
+        list.add("2-Вывести вывести историю");
+        list.add("0-выход");
+        list.add("Введите цифру нужного пункта - ");
+        return printlList(list,0,2);
+    }
+
+    private static int printlList(final List<String> list, int start, int end){
         do {
-            System.out.println("Выберите действие:");
-            System.out.println("1-Призвети новый расчет");
-            System.out.println("2-Вывести вывести историю");
-            System.out.println("0-выход");
-            System.out.print("Введите цифру нужного пункта - ");
+            for (int i = 0; i < list.size()-1; i++) {
+                System.out.println(list.get(i));
+            }
+            System.out.print(list.getLast());
             try {
-                return Input.number(0, 2);
+                return Input.number(start, end);
             } catch (Exception e) {
                 System.out.println("Действия с таким номером не существует");
             }
@@ -18,90 +28,67 @@ public class Menu {
     }
 
     public static int sign() {
-        while (true) {
-            System.out.println("Выберите действие:");
-            System.out.println("1 Сложение ");
-            System.out.println("2 Вычетание ");
-            System.out.println("3 Умножение ");
-            System.out.println("4 Деление ");
-            System.out.print("Введите цифру нужного пункта - ");
-            try {
-                return Input.number(1, 4);
-            } catch (Exception e) {
-                System.out.println("Действия с таким номером не существует");
-            }
-        }
+        List<String> list = new ArrayList<>();
+        list.add("Выберите действие:");
+        list.add("1 Сложение ");
+        list.add("2 Вычетание ");
+        list.add("3 Умножение ");
+        list.add("4 Деление ");
+        list.add("Введите цифру нужного пункта - ");
+        return printlList (list,0,4);
     }
 
     public static int result(final Calculation calculation) {
-        System.out.println(calculation);
+        List<String> list = new ArrayList<>();
+        list.add(calculation.toString());
+        list.add("Выберите действие:");
+        if (!calculation.is_isDivisionByZero()) list.add("1-Призвести новый расчет c результатом");
+        list.add("2-назад");
+        list.add("0-выход");
+        list.add("Введите цифру нужного пункта - ");
+        int number;
         do {
-            int number;
-            System.out.println("Выберите действие:");
-            if (!calculation.is_isDivisionByZero()) System.out.println("1-Призвести новый расчет c результатом");
-            System.out.println("2-назад");
-            System.out.println("0-выход");
-            System.out.print("Введите цифру нужного пункта - ");
-            try {
-                number = Input.number(0, 2);
-            } catch (Exception e) {
-                System.out.println("Введен не существующий пункт меню");
-                continue;
-            }
+            number = printlList(list,0,2);
             if (calculation.is_isDivisionByZero() && number == 1) {
                 System.out.println("Введен не существующий пункт меню");
                 continue;
             }
-            return number;
-        } while (true);
+        }while (false);
+        return number;
     }
 
     public static int history(final List<Integer> spisok) {
-        while (true) {
-            System.out.println("Выберите действие:");
-            for (Integer integer : spisok) {
-                System.out.println("Расчеты № " + integer);
-            }
-            System.out.println("-1-назад в меню");
-            System.out.println("0-выход");
-            System.out.print("Введите цифру нужного пункта - ");
-            try {
-                return Input.number(-1, spisok.size());
-            } catch (Exception e) {
-                System.out.println("Действия с таким номером не существует");
-            }
-        }
+        List<String> list = new ArrayList<>();
+        list.add("Выберите действие:");
+        for (Integer integer : spisok)
+            list.add("Расчеты № " + integer);
+        list.add("-1-назад в меню");
+        list.add("0-выход");
+        list.add("Введите цифру нужного пункта - ");
+        return printlList(list,-1,spisok.size());
     }
 
     public static int history(final Calculation calculation) {
-        while (true) {
-            int number;
-            System.out.println("Расчет");
-            System.out.println(calculation);
-            System.out.println("Комментарии к расчету");
-            List<String> listComments = calculation.get_listComments();
-            if (listComments.isEmpty()) System.out.println("комментарии нету");
-            for (String comment : listComments) {
-                System.out.println(comment);
-            }
-            System.out.println("Выберите действие:");
-            if (!calculation.is_isDivisionByZero()) System.out.println("1-Призвести новый расчет c результатом");
-            System.out.println("2-Добавить комментарий");
-            System.out.println("3-назад в историю");
-            System.out.println("0-выход");
-            System.out.print("Введите цифру нужного пункта - ");
-            try {
-                number = Input.number(0, 3);
-            } catch (Exception e) {
-                System.out.println("Введен не существующий пункт меню");
-                continue;
-            }
+        List<String> list = new ArrayList<>();
+        list.add("Расчет");
+        list.add(calculation.toString());
+        list.add("Комментарии к расчету");
+        list.addAll(calculation.get_listComments());
+        list.add("Выберите действие:");
+        if (!calculation.is_isDivisionByZero()) list.add("1-Призвести новый расчет c результатом");
+        list.add("2-Добавить комментарий");
+        list.add("3-назад в историю");
+        list.add("0-выход");
+        list.add("Введите цифру нужного пункта - ");
+        int number;
+        do {
+            number = printlList(list,0,3);
             if (calculation.is_isDivisionByZero() && number == 1) {
                 System.out.println("Введен не существующий пункт меню");
                 continue;
             }
-            return number;
-        }
+        }while (false);
+        return number;
     }
 
     public static String comment() throws IOException {
