@@ -6,6 +6,29 @@ import java.sql.SQLException;
 public class SqLite implements AutoCloseable {
     private final Connection _dbConnection;
 
+    public static void WriteDB(final Calculation calculation, int kod){
+        try (SqLite db = new SqLite()) {
+            try {
+                switch (kod){
+                    case 0:{
+                        db.WriteDBCalculations(calculation.get_first(), calculation.get_sign(),
+                                calculation.get_second(), calculation.get_result());
+                        break;
+                    }
+                    case 1:{
+                        db.WriteDBComments(calculation.get_id(), calculation.lastComment());
+                        break;
+                    }
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+    }
+
     public SqLite() throws SQLException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
         _dbConnection = DriverManager.getConnection("jdbc:sqlite:db.sqlite");

@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Calculation {
+    private int _id;
     private int _result;
     private int _first;
     private int _sign;
     private int _second;
     private boolean _isDivisionByZero;
-    private List<String> _listComments;
+    private final List<String> _listComments;
+
+    public String lastComment() {
+        return _listComments.getLast();
+    }
 
     public boolean get_isPrimary() {
         return _isPrimary;
@@ -25,12 +30,14 @@ public class Calculation {
         _isDivisionByZero = false;
         _listComments = new ArrayList<>();
         _isPrimary = true;
+        _id = -1;
     }
 
     public Calculation(ResultSet resultSet) throws SQLException {
         _listComments = new ArrayList<>();
         _isPrimary = false;
         while (resultSet.next()) {
+            _id = resultSet.getInt("ID");
             if (isNumber(resultSet.getString("result"))) {
                 _result = resultSet.getInt("result");
                 _isDivisionByZero = false;
@@ -53,25 +60,30 @@ public class Calculation {
         }
     }
 
-    public void set_listComments(ResultSet resultSet)throws SQLException{
+    public void set_listComments(ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
             _listComments.add(resultSet.getString("comment"));
         }
     }
-    public void set_listComments(String textComment){
-            _listComments.add(textComment);
+
+    public void addListComments(String textComment) {
+        _listComments.add(textComment);
     }
 
-    public void set_first(int _first) {
-        this._first = _first;
+    public int get_id() {
+        return _id;
     }
 
-    public void set_sign(int _sign) {
-        this._sign = _sign;
+    public void set_First(int first) {
+        this._first = first;
     }
 
-    public void set_second(int _second) {
-        this._second = _second;
+    public void set_Sign(int sign) {
+        this._sign = sign;
+    }
+
+    public void set_Second(int second) {
+        this._second = second;
     }
 
     public void Continue() {
@@ -150,7 +162,6 @@ public class Calculation {
     }
 
     public List<String> get_listComments() {
-        List<String> list = _listComments.stream().toList();
-        return list;
+        return _listComments.stream().toList();
     }
 }
